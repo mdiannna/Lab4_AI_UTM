@@ -19,3 +19,4 @@ If there are some problems with heroku deploy, login and try the following comma
 - https://towardsdatascience.com/how-to-deploy-your-fastapi-app-on-heroku-for-free-8d4271a4ab9
 - https://devcenter.heroku.com/articles/error-codes#r10-boot-timeout
 - https://stackoverflow.com/questions/40356197/python-error-r10-boot-timeout-web-process-failed-to-bind-to-port-within
+- https://stackoverflow.com/questions/59391560/how-to-run-uvicorn-in-heroku

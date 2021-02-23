@@ -17,22 +17,31 @@ from sanic_cors import CORS, cross_origin
 # app = Sanic(__name__)
 CORS(app)
 
-@app.route("/evaluate")
+# parameters: data, model_name
+@app.route("/evaluate", methods=["POST"])
 async def evaluate(request):
     return response.json({"TODO": "evaluate model route"})
 
-@app.route("/train")
+# parameters: data, model_name
+@app.route("/train", methods=["POST"])
 async def predict(request):
     return response.json({"TODO": "train route"})
 
-@app.route("/predict")
+# parameters: data, model_name
+@app.route("/predict", methods=['POST'])
 async def predict(request):
     return response.json({"TODO": "predict route"})
 
 
 @app.route("/")
 async def test(request):
-    return response.json("Hello world!")
+    available_routes = {
+        "for making predictions": "POST /predict (data, model_name)",
+        "for training the model": "POST /train (data, model_name)",
+        "for evaluating the model": "POST /evaluate (data, model_name)"
+    }
+
+    return response.json({"available_routes": available_routes})
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
