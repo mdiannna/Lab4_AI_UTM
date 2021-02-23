@@ -1,1 +1,1 @@
-web: uvicorn asgi:app --access-log --reload
+worker: uvicorn asgi:app --access-log --reload
