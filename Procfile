@@ -1,1 +1,1 @@
-web: uvicorn asgi:app --access-log --reload
+web: uvicorn asgi:app --host 0.0.0.0 --port $PORT
