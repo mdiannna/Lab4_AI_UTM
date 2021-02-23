@@ -1,9 +1,25 @@
-from flask import Flask
-app = Flask(__name__)
+from sanic import Sanic
+from sanic import response
+import json
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+# for different versions of sklearn:
+# from sklearn.externals import joblib
+import joblib
+import os
+import numpy as np
+import os.path
+from os import path
 
-if __name__ == '__main__':    
-    app.run(host='0.0.0.0', port=8002, debug=True)
+app = Sanic("App Name")
+
+from sanic_cors import CORS, cross_origin
+
+# app = Sanic(__name__)
+CORS(app)
+
+@app.route("/")
+async def test(request):
+    return response.json({"hello": "world"})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)
