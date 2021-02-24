@@ -30,9 +30,23 @@ The system is available as a HTTP REST API, with 3 routes available:
 - POST /evaluate
 - POST /predict
  
-#### The system can be used with curl requests:
+#### The system can be used with curl requests - on the online server:
+- Example of POST /train request with curl on local server:
 
-- Example of POST /train request with curl:
+``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'col_to_predict=medianCompexValue' -F 'dataset_path=https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt' -F 'column_names=['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']' https://linear-regression-diana-utm.herokuapp.com/train```
+
+- Example of POST /predict request with curl:
+
+``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'data=[-122.250000,37.850000,52.000000,1274.000000,235.000000,558.000000,219.000000,5.643100] ' https://linear-regression-diana-utm.herokuapp.com/predict```
+
+- Example of POST /evaluate request with curl:
+
+``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'col_to_predict=medianCompexValue' -F 'dataset_path=https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt' -F 'column_names=['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']' https://linear-regression-diana-utm.herokuapp.com/evaluate```
+
+
+#### The system can be used with curl requests - on local server:
+
+- Example of POST /train request with curl on local server:
 
 ``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'col_to_predict=medianCompexValue' -F 'dataset_path=https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt' -F 'column_names=['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']' http://localhost:5000/train```
 

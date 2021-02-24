@@ -1,20 +1,15 @@
 from sanic import Sanic
 from sanic import response
-import json
 
-# for different versions of sklearn:
-# from sklearn.externals import joblib
 import joblib
 import os
 import numpy as np
 import os.path
-from os import path
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import explained_variance_score
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 
-# from sklearn.model_selection import train_test_split
 import pandas as pd
 
 
@@ -22,12 +17,12 @@ app = Sanic("App Name")
 
 from sanic_cors import CORS, cross_origin
 
-# app = Sanic(__name__)
 CORS(app)
 
-# parameters: data, model_name
+
 @app.route("/evaluate", methods=["POST", "GET"])
 async def evaluate(request):
+    """ evaluate model route """
 
     if request.method=='GET':
         return response.json("EVALUATE ROUTE. Please make a POST request!")
@@ -46,7 +41,11 @@ async def evaluate(request):
     test_dataset_path = TEST_DATASET_PATH_DEFAULT
     column_names = COLUMN_NAMES_DEFAULT
 
-    model = joblib.load(model_name)
+    try:
+        model = joblib.load(model_name)
+    except Exception as e:
+        return response.json({"status": "error", "message": "Could not load model " + str(model_name)}, status=500)
+
 
     test_data = []
 
@@ -63,19 +62,23 @@ async def evaluate(request):
     if 'column_names' in request.form:
         column_names = request.form.get('column_names').replace("[", "").replace("]", "").replace(" ", "").split(",")
 
-    df = pd.read_csv(test_dataset_path, names=column_names)
-    
-    X_test = df.copy()
-    X_test = X_test.drop(columns=[col_to_predict])
-    y_real = df[col_to_predict].values.flatten()
+    try:
+        df = pd.read_csv(test_dataset_path, names=column_names)
+        
+        X_test = df.copy()
+        X_test = X_test.drop(columns=[col_to_predict])
+        y_real = df[col_to_predict].values.flatten()
 
-    
-    print("Score on test (r-squared score):", model.score(X_test, y_real))
-    print("Explained variance score:", explained_variance_score(y_real, model.predict(X_test)))
-    print("MSE:", mean_squared_error(y_real, model.predict(X_test)))
-    cv_score_test = cross_val_score(model, X_test, y_real, cv=5)
-    print("cross val score:", cv_score_test)
-    print("average of cross val scores:", np.average(cv_score_test))
+        
+        print("Score on test (r-squared score):", model.score(X_test, y_real))
+        print("Explained variance score:", explained_variance_score(y_real, model.predict(X_test)))
+        print("MSE:", mean_squared_error(y_real, model.predict(X_test)))
+        cv_score_test = cross_val_score(model, X_test, y_real, cv=5)
+        print("cross val score:", cv_score_test)
+        print("average of cross val scores:", np.average(cv_score_test))
+    except Exception as e:
+        return response.json({"status": "error", "message": str(e)}, status=500)
+
 
     scores = {
         'R-squared': model.score(X_test, y_real),
@@ -87,9 +90,9 @@ async def evaluate(request):
     return response.json({"status": "success", "scores": str(scores)})
 
 
-# parameters: data, model_name, col_to_predict
 @app.route("/train", methods=["POST", "GET"])
 async def train(request):
+    """ train model route """
     if request.method=='GET':
         return response.json("TRAIN ROUTE. Please make a POST request!")
 
@@ -119,14 +122,18 @@ async def train(request):
 
         print("column names:", column_names)
     
-    df = pd.read_csv(dataset_path, names=column_names)
-    
-    X = df.copy()
-    X = X.drop(columns=[col_to_predict])
-    y = df[col_to_predict].values.flatten()
+    try:
+        df = pd.read_csv(dataset_path, names=column_names)
+        
+        X = df.copy()
+        X = X.drop(columns=[col_to_predict])
+        y = df[col_to_predict].values.flatten()
 
-    reg = LinearRegression().fit(X, y)
-    joblib.dump(reg, model_name)
+        reg = LinearRegression().fit(X, y)
+        joblib.dump(reg, model_name)
+    except Exception as e:
+        return response.json({"status": "error", "message": str(e)}, status=500)
+
 
     input_params = {
         "model_name": model_name,
@@ -138,13 +145,13 @@ async def train(request):
     return response.json({"status": "succes", "model_name_trained": model_name, "input_parameters": input_params})
 
 
-# parameters: data, model_name
 @app.route("/predict", methods=['POST', "GET"])
 async def predict(request):
+    """ make a prediction using model route """
 
     if request.method=='GET':
         return response.json("PREDICT ROUTE. Please make a POST request!")
-    # COLUMN_NAMES_DEFAULT = ['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']
+
     MODEL_NAME_DEFAULT = 'multiple_regression_model.sav'
         
     print("received parameters:", request.form)
@@ -164,16 +171,20 @@ async def predict(request):
 
         print("data:", data)
     
-    model = joblib.load(model_name)
-    # print(model)
+    try:
+        model = joblib.load(model_name)
+    except Exception as e:
+        return response.json({"status": "error", "message": "Could not load model " + str(model_name)}, status=500)
 
-    X = np.array(data)
+    try:
+        X = np.array(data)
 
-    if len(X.shape)==1:
-        X = np.array([data])
-
-    
-    y_predicted = model.predict(X)
+        if len(X.shape)==1:
+            X = np.array([data])
+        
+        y_predicted = model.predict(X)
+    except Exception as e:
+        return response.json({"status": "error", "message": str(e)}, status=500)
 
     return response.json({"status": "success. predict route", "prediction": str(y_predicted)})
 
@@ -189,7 +200,5 @@ async def index(request):
     return response.json({"available_routes": available_routes})
 
 if __name__ == "__main__":
-    # app.run(host="0.0.0.0", debug=True)
     port1 = int(os.environ.get('PORT', 5000))
-    # uvicorn.run(app, host='0.0.0.0', port=port1)
     app.run(host="0.0.0.0", port=port1)
