@@ -28,6 +28,11 @@ CORS(app)
 # parameters: data, model_name
 @app.route("/evaluate", methods=["POST", "GET"])
 async def evaluate(request):
+
+    if request.method=='GET':
+        return response.json("EVALUATE ROUTE. Please make a POST request!")
+
+
     MODEL_NAME_DEFAULT = 'multiple_regression_model.sav'
     COLUMN_NAMES_DEFAULT = ['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']
     COL_TO_PREDICT_DEFAULT = 'medianCompexValue'
@@ -85,6 +90,9 @@ async def evaluate(request):
 # parameters: data, model_name, col_to_predict
 @app.route("/train", methods=["POST", "GET"])
 async def train(request):
+    if request.method=='GET':
+        return response.json("TRAIN ROUTE. Please make a POST request!")
+
     DATASET_PATH_DEFAULT = 'https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt'
     COLUMN_NAMES_DEFAULT = ['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']
     MODEL_NAME_DEFAULT = 'multiple_regression_model.sav'
@@ -134,6 +142,8 @@ async def train(request):
 @app.route("/predict", methods=['POST', "GET"])
 async def predict(request):
 
+    if request.method=='GET':
+        return response.json("PREDICT ROUTE. Please make a POST request!")
     # COLUMN_NAMES_DEFAULT = ['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']
     MODEL_NAME_DEFAULT = 'multiple_regression_model.sav'
         
