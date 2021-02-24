@@ -10,8 +10,13 @@ import numpy as np
 import os.path
 from os import path
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import explained_variance_score
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
+
 # from sklearn.model_selection import train_test_split
 import pandas as pd
+
 
 app = Sanic("App Name")
 
@@ -23,7 +28,59 @@ CORS(app)
 # parameters: data, model_name
 @app.route("/evaluate", methods=["POST", "GET"])
 async def evaluate(request):
-    return response.json({"TODO": "evaluate model route"})
+    MODEL_NAME_DEFAULT = 'multiple_regression_model.sav'
+    COLUMN_NAMES_DEFAULT = ['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']
+    COL_TO_PREDICT_DEFAULT = 'medianCompexValue'
+    TEST_DATASET_PATH_DEFAULT = 'https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt'
+
+        
+    print("received parameters:", request.form)
+
+    model_name = MODEL_NAME_DEFAULT
+    col_to_predict = COL_TO_PREDICT_DEFAULT
+    test_dataset_path = TEST_DATASET_PATH_DEFAULT
+    column_names = COLUMN_NAMES_DEFAULT
+
+    model = joblib.load(model_name)
+
+    test_data = []
+
+    if 'model_name' in request.form:
+        model_name = request.form.get('model_name')
+    
+    if 'test_dataset_path' in request.form:
+        test_dataset_path = request.form.get('test_dataset_path')
+
+    if 'col_to_predict' in request.form:
+        col_to_predict = request.form.get('col_to_predict') 
+    
+
+    if 'column_names' in request.form:
+        column_names = request.form.get('column_names').replace("[", "").replace("]", "").replace(" ", "").split(",")
+
+    df = pd.read_csv(test_dataset_path, names=column_names)
+    
+    X_test = df.copy()
+    X_test = X_test.drop(columns=[col_to_predict])
+    y_real = df[col_to_predict].values.flatten()
+
+    
+    print("Score on test (r-squared score):", model.score(X_test, y_real))
+    print("Explained variance score:", explained_variance_score(y_real, model.predict(X_test)))
+    print("MSE:", mean_squared_error(y_real, model.predict(X_test)))
+    cv_score_test = cross_val_score(model, X_test, y_real, cv=5)
+    print("cross val score:", cv_score_test)
+    print("average of cross val scores:", np.average(cv_score_test))
+
+    scores = {
+        'R-squared': model.score(X_test, y_real),
+        'Explained variance score': explained_variance_score(y_real, model.predict(X_test)),
+        'MSE': mean_squared_error(y_real, model.predict(X_test)),
+        'Cross vall score average': np.average(cv_score_test)
+    }
+
+    return response.json({"status": "success", "scores": str(scores)})
+
 
 # parameters: data, model_name, col_to_predict
 @app.route("/train", methods=["POST", "GET"])
@@ -50,9 +107,7 @@ async def train(request):
         dataset_path = request.form.get('dataset_path')
     
     if 'column_names' in request.form:
-        # column_names = json.loads(request.form.get('column_names'))
         column_names = request.form.get('column_names').replace("[", "").replace("]", "").replace(" ", "").split(",")
-
 
         print("column names:", column_names)
     
