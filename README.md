@@ -21,6 +21,7 @@ This project implements a continuous integration/delivery pipeline, using Heroku
 - Numpy
 - Sanic framework
 - Heroku
+- Microsoft Azure
 
 ## How to use
 
