@@ -2,6 +2,13 @@
 
 Lab 4 for the Fundamentals of Artificial Ingelligence Course at Technical University of Moldova
 
+## How to use
+#### Make a post request with curl:
+``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'col_to_predict=medianCompexValue' -F 'dataset_path=https://raw.githubusercontent.com/mdiannna/Labs_UTM_AI/main/Lab3/apartmentComplexData.txt' -F 'column_names=['col1', 'col2', 'complexAge', 'totalRooms', 'totalBedrooms', 'complexInhabitants', 'apartmentsNr', 'col8', 'medianCompexValue']' http://localhost:5000/train```
+
+
+``` $ curl -X POST -F 'model_name=my_reg_model.sav' -F 'data=[-122.250000,37.850000,52.000000,1274.000000,235.000000,558.000000,219.000000,5.643100] ' http://localhost:5000/predict```
+
 
 ## Troubleshooting
 If there are some problems with heroku deploy, login and try the following command:
