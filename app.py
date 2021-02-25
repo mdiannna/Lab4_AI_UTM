@@ -4,13 +4,12 @@ from sanic import response
 import joblib
 import os
 import numpy as np
+import pandas as pd
 import os.path
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import explained_variance_score
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
-
-import pandas as pd
 
 
 app = Sanic("App Name")
