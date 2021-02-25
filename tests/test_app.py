@@ -40,7 +40,6 @@ def test_post_evaluate_returns_200():
     request, response = app.test_client.post('/evaluate')
     assert response.status == 200
 
-
 def test_index_put_not_allowed():
     request, response = app.test_client.put('/')
     assert response.status == 405
