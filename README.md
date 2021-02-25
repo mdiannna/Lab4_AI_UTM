@@ -21,7 +21,6 @@ This project implements a continuous integration/delivery pipeline, using Heroku
 - Numpy
 - Sanic framework
 - Heroku
-- Microsoft Azure
 
 ## How to use
 
@@ -65,13 +64,14 @@ If there are some problems with heroku deploy, login and try the following comma
 ``` $heroku ps:scale web=1 --app=linear-regression-diana-utm ```
 
 ## Bibliography and resources 
+- GitHub  Student  Developer  Pack.  Accessed  February  25,  2021. https://education.github.com/pack.
+- Github Actions. Accessed February 25, 2021.https://github.com/mdiannna/Lab4_AI_UTM/actions/new.
+- GitHub Integration (Heroku GitHub Deploys) by Heroku Dev Center. Accessed February 25, 2021. https://devcenter.heroku.com/articles/github-integration.
+- Building a Flask App with CI/CD using Travis CI and Heroku. Accessed February 25,2021.https://srujandeshpande.medium.com/building-a-python3-flask-web-app-with-ci-cd-using-travis-ci-and-heroku-10529f9d27a.
+- CI/CD: Flask App + GitHub, Travis,  Heroku by Samuel ATULE. Accessed February 25,2021.https://sweetcode.io/flask-app-github-travis-heroku/.
+- Sanic official documentation. Accessed February 25, 2021.https://sanic.readthedocs.io/en/latest/.10
 - https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/
-- https://education.github.com/pack/offers
-- https://docs.github.com/en/actions/guides/deploying-to-azure-app-service
 - https://devcenter.heroku.com/articles/heroku-ci
-- https://devcenter.heroku.com/articles/github-integration
-- https://dashboard.heroku.com/apps/linear-regression-diana-utm/deploy/github
-- https://towardsdatascience.com/mlops-a-tale-of-two-azure-pipelines-4135b954997
 - https://towardsdatascience.com/how-to-deploy-your-fastapi-app-on-heroku-for-free-8d4271a4ab9
 - https://devcenter.heroku.com/articles/error-codes#r10-boot-timeout
 - https://stackoverflow.com/questions/40356197/python-error-r10-boot-timeout-web-process-failed-to-bind-to-port-within
