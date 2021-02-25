@@ -31,3 +31,4 @@ websockets==8.1
 gunicorn
 uvicorn
 sanic-cors
+termcolor==1.1.0
